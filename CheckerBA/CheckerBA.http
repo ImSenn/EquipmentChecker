@@ -1,0 +1,6 @@
+@CheckerBA_HostAddress = http://localhost:5246
+
+GET {{CheckerBA_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

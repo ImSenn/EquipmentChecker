@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckerBA", "CheckerBA.csproj", "{FE90C2A2-E02B-C494-3308-FEB9F31ADEDA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FE90C2A2-E02B-C494-3308-FEB9F31ADEDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE90C2A2-E02B-C494-3308-FEB9F31ADEDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE90C2A2-E02B-C494-3308-FEB9F31ADEDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE90C2A2-E02B-C494-3308-FEB9F31ADEDA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {010A5324-2E7B-4C69-8265-301EECE3379F}
+	EndGlobalSection
+EndGlobal

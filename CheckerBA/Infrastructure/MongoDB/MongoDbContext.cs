@@ -20,5 +20,6 @@ namespace CheckerBA.Infrastructure.MongoDB
         public IMongoCollection<Telemetry> Telemetries => _database.GetCollection<Telemetry>("Telemetries");
         public IMongoCollection<Event> Events => _database.GetCollection<Event>("Events");
         public IMongoCollection<EnergyUsed> EnergyUsed => _database.GetCollection<EnergyUsed>("EnergyUsed");
+        public IMongoCollection<AppUser> Users => _database.GetCollection<AppUser>("Users");
     }
 }

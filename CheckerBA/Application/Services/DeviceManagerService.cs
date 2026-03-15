@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using CheckerBA.Domain.Entities;
 using CheckerBA.Domain.Interfaces;
 
@@ -14,34 +12,22 @@ namespace CheckerBA.Application.Services
             _deviceRepo = deviceRepo;
         }
 
-        public async Task<List<Device>> GetAllDevicesAsync()
-        {
-            return await _deviceRepo.GetAllDevicesAsync();
-        }
+        public Task<List<Device>> GetAllDevicesAsync()
+            => _deviceRepo.GetAllDevicesAsync();
 
-        public async Task<Device> GetDeviceByIdAsync(string id)
-        {
-            return await _deviceRepo.GetDeviceByIdAsync(id);
-        }
+        public Task<Device?> GetDeviceByIdAsync(string deviceId)
+            => _deviceRepo.GetDeviceByIdAsync(deviceId);
 
         public async Task AddDeviceAsync(Device device)
         {
-            if (string.IsNullOrEmpty(device.Id))
-            {
-                device.Id = Guid.NewGuid().ToString();
-            }
-            device.CreatedAt = System.DateTime.UtcNow;
+            device.CreatedAt = DateTime.UtcNow;
             await _deviceRepo.AddDeviceAsync(device);
         }
 
-        public async Task UpdateDeviceAsync(Device device)
-        {
-            await _deviceRepo.UpdateDeviceAsync(device);
-        }
+        public Task UpdateDeviceAsync(Device device)
+            => _deviceRepo.UpdateDeviceAsync(device);
 
-        public async Task DeleteDeviceAsync(string id)
-        {
-            await _deviceRepo.DeleteDeviceAsync(id);
-        }
+        public Task DeleteDeviceAsync(string deviceId)
+            => _deviceRepo.DeleteDeviceAsync(deviceId);
     }
 }

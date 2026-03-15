@@ -1,17 +1,16 @@
 using System;
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace CheckerBA.Domain.Entities
 {
     public class Device
     {
+        /// <summary>Primary key = deviceId (e.g. "MACHINE_01")</summary>
         [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; } = null!;
+        public string DeviceId { get; set; } = null!;
         public string Name { get; set; } = null!;
         public string Type { get; set; } = null!;
-        public double PowerRated { get; set; }
+        public double PowerRating { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

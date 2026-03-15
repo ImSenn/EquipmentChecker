@@ -1,4 +1,3 @@
-
 using CheckerBA.Domain.Interfaces;
 using CheckerBA.Domain.Entities;
 using CheckerBA.Infrastructure.MongoDB;
@@ -17,12 +16,14 @@ namespace CheckerBA.Infrastructure.Repositories
 
         public async Task<List<Device>> GetAllDevicesAsync()
         {
-            return await _devices.Find(device => true).ToListAsync();
+            return await _devices.Find(_ => true).ToListAsync();
         }
-        public async Task<Device> GetDeviceByIdAsync(string id)
+
+        public async Task<Device?> GetDeviceByIdAsync(string deviceId)
         {
-            return await _devices.Find(device => device.Id == id).FirstOrDefaultAsync();
+            return await _devices.Find(d => d.DeviceId == deviceId).FirstOrDefaultAsync();
         }
+
         public async Task AddDeviceAsync(Device device)
         {
             await _devices.InsertOneAsync(device);
@@ -30,11 +31,12 @@ namespace CheckerBA.Infrastructure.Repositories
 
         public async Task UpdateDeviceAsync(Device device)
         {
-            await _devices.ReplaceOneAsync(d => d.Id == device.Id, device, new ReplaceOptions { IsUpsert = true });
+            await _devices.ReplaceOneAsync(d => d.DeviceId == device.DeviceId, device, new ReplaceOptions { IsUpsert = false });
         }
-        public async Task DeleteDeviceAsync(string id)
+
+        public async Task DeleteDeviceAsync(string deviceId)
         {
-            await _devices.DeleteOneAsync(d => d.Id == id);
+            await _devices.DeleteOneAsync(d => d.DeviceId == deviceId);
         }
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using CheckerBA.Domain.Entities;
+using System;
 
 namespace CheckerBA.Infrastructure.MongoDB
 {
@@ -12,7 +13,12 @@ namespace CheckerBA.Infrastructure.MongoDB
         {
             var settings = options.Value;
 
-            var client = new MongoClient(settings.ConnectionString);
+            var mongoSettings = MongoClientSettings.FromConnectionString(settings.ConnectionString);
+            mongoSettings.ServerSelectionTimeout = TimeSpan.FromMilliseconds(settings.ServerSelectionTimeoutMs);
+            mongoSettings.ConnectTimeout = TimeSpan.FromMilliseconds(settings.ConnectTimeoutMs);
+            mongoSettings.SocketTimeout = TimeSpan.FromMilliseconds(settings.SocketTimeoutMs);
+
+            var client = new MongoClient(mongoSettings);
             _database = client.GetDatabase(settings.DatabaseName);
         }
 

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using CheckerBA.Domain.Interfaces;
 using CheckerBA.Domain.Entities;
 using CheckerBA.Application.Services;
+using MongoDB.Driver;
 
 namespace CheckerBA.Infrastructure.Mqtt
 {
@@ -13,6 +14,7 @@ namespace CheckerBA.Infrastructure.Mqtt
         private readonly ILogger<MqttListenerService> _logger;
         private readonly TelemetryProcessingService _telemetryService;
         private readonly EventProcessingService _eventService;
+        private DateTime _lastMongoTimeoutLogUtc = DateTime.MinValue;
 
         public MqttListenerService(
             IMqttService mqttService,
@@ -75,6 +77,24 @@ namespace CheckerBA.Infrastructure.Mqtt
                             _logger.LogInformation("[HEARTBEAT] {DeviceId} online", deviceId);
                             break;
                     }
+                }
+                catch (TimeoutException ex)
+                {
+                    // Log timeout at most once every 10 seconds to avoid log flooding.
+                    var now = DateTime.UtcNow;
+                    if ((now - _lastMongoTimeoutLogUtc).TotalSeconds >= 10)
+                    {
+                        _lastMongoTimeoutLogUtc = now;
+                        _logger.LogError(ex,
+                            "[MQTT] MongoDB timeout khi xử lý topic: {Topic}. Kiểm tra MongoDB Atlas URI/network/IP whitelist.",
+                            topic);
+                    }
+                }
+                catch (MongoException ex)
+                {
+                    _logger.LogError(ex,
+                        "[MQTT] MongoDB error khi xử lý topic: {Topic}",
+                        topic);
                 }
                 catch (Exception ex)
                 {

@@ -1,0 +1,102 @@
+<UserControl x:Class="CheckerWPF.Views.DeviceListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="4,4,4,12">
+            <TextBlock Text="Danh sách thiết bị"
+                       FontSize="20" FontWeight="SemiBold"
+                       VerticalAlignment="Center" Margin="0,0,16,0"/>
+            <Button Content="↻ Làm mới"
+                    Command="{Binding RefreshCommand}"
+                    Style="{StaticResource PrimaryBtn}"
+                    Height="34"/>
+        </StackPanel>
+
+        <!-- Device grid -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Devices}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}" Width="220" Height="150"
+                                Cursor="Hand">
+                            <Border.InputBindings>
+                                <MouseBinding MouseAction="LeftClick"
+                                              Command="{Binding DataContext.SelectDeviceCommand,
+                                                  RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                              CommandParameter="{Binding}"/>
+                            </Border.InputBindings>
+                            <Grid>
+                                <!-- Online indicator -->
+                                <Ellipse Width="10" Height="10"
+                                         HorizontalAlignment="Right" VerticalAlignment="Top">
+                                    <Ellipse.Style>
+                                        <Style TargetType="Ellipse">
+                                            <Setter Property="Fill" Value="#D3D1C7"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsOnline}" Value="True">
+                                                    <Setter Property="Fill" Value="#1D9E75"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Ellipse.Style>
+                                </Ellipse>
+
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Name}"
+                                               FontSize="15" FontWeight="SemiBold"
+                                               TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding DeviceId}"
+                                               FontSize="11" Foreground="#888" Margin="0,2,0,12"/>
+
+                                    <!-- Nhiệt độ -->
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="🌡 " FontSize="12"/>
+                                        <TextBlock FontSize="13">
+                                            <Run Text="{Binding LastTemperature, StringFormat={}{0:0.0}}"/>
+                                            <Run Text="°C"/>
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <!-- Trạng thái -->
+                                    <Border Margin="0,8,0,0" Padding="8,3" CornerRadius="4"
+                                            HorizontalAlignment="Left">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="#D3D1C7"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding RunState}" Value="RUNNING">
+                                                        <Setter Property="Background" Value="#EAF3DE"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding RunState}" Value="STOPPED">
+                                                        <Setter Property="Background" Value="#FCEBEB"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock Text="{Binding RunState}" FontSize="11"/>
+                                    </Border>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Status bar -->
+        <TextBlock Grid.Row="2" Text="{Binding StatusText}"
+                   FontSize="11" Foreground="#888" Margin="4,4,0,0"/>
+    </Grid>
+</UserControl>

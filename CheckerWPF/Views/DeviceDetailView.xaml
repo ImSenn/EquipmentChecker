@@ -1,0 +1,225 @@
+<UserControl x:Class="CheckerWPF.Views.DeviceDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF">
+    <Grid Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Row 0: Header -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="4,4,4,8">
+            <TextBlock Text="{Binding DeviceName}"
+                       FontSize="20" FontWeight="SemiBold"
+                       VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <TextBlock Text="{Binding DeviceId}"
+                       FontSize="12" Foreground="#888"
+                       VerticalAlignment="Center" Margin="0,0,16,0"/>
+            <!-- Commands -->
+            <Button Content="▶ START"  Command="{Binding SendStartCommand}"
+                    Style="{StaticResource AccentBtn}" Height="32" Margin="0,0,6,0"/>
+            <Button Content="■ STOP"   Command="{Binding SendStopCommand}"
+                    Style="{StaticResource DangerBtn}" Height="32" Margin="0,0,6,0"/>
+            <Button Content="↺ RESTART" Command="{Binding SendRestartCommand}"
+                    Style="{StaticResource PrimaryBtn}" Height="32"/>
+        </StackPanel>
+
+        <!-- Row 1: Metric cards (4 cards ngang) -->
+        <UniformGrid Grid.Row="1" Columns="4" Margin="0,0,0,4">
+            <!-- Nhiệt độ -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Nhiệt độ" FontSize="11" Foreground="#888"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                        <TextBlock Text="{Binding CurrentTemp, StringFormat={}{0:0.0}}"
+                                   FontSize="28" FontWeight="SemiBold">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="#333"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding CurrentTemp,
+                                            Converter={StaticResource TempAlertConverter}}"
+                                            Value="True">
+                                            <Setter Property="Foreground" Value="{StaticResource DangerBrush}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <TextBlock Text="°C" FontSize="14" VerticalAlignment="Bottom" Margin="2,0,0,4"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Rung động -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Rung động" FontSize="11" Foreground="#888"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                        <TextBlock Text="{Binding CurrentVibration, StringFormat={}{0:0.000}}"
+                                   FontSize="28" FontWeight="SemiBold" Foreground="#333"/>
+                        <TextBlock Text=" mm/s" FontSize="12" VerticalAlignment="Bottom" Margin="2,0,0,4" Foreground="#888"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Công suất -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Công suất" FontSize="11" Foreground="#888"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                        <TextBlock Text="{Binding CurrentPower, StringFormat={}{0:0}}"
+                                   FontSize="28" FontWeight="SemiBold" Foreground="#333"/>
+                        <TextBlock Text=" W" FontSize="12" VerticalAlignment="Bottom" Margin="2,0,0,4" Foreground="#888"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Điện năng hôm nay -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Điện năng hôm nay" FontSize="11" Foreground="#888"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                        <TextBlock Text="{Binding EnergyKWh, StringFormat={}{0:0.00}}"
+                                   FontSize="28" FontWeight="SemiBold" Foreground="#333"/>
+                        <TextBlock Text=" kWh" FontSize="12" VerticalAlignment="Bottom" Margin="2,0,0,4" Foreground="#888"/>
+                    </StackPanel>
+                    <TextBlock Foreground="#888" FontSize="11">
+                        <Run Text="≈"/>
+                        <Run Text="{Binding EstimatedCost, StringFormat={}{0:N0}}"/>
+                        <Run Text="đ"/>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+
+        <!-- Row 2: Charts + Alerts (3 cột) -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="260"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Chart: Nhiệt độ -->
+            <Border Grid.Column="0" Grid.Row="0" Style="{StaticResource Card}">
+                <Grid>
+                    <TextBlock Text="Nhiệt độ (°C)" FontSize="11" Foreground="#888"
+                               VerticalAlignment="Top"/>
+                    <lvc:CartesianChart Series="{Binding TempSeries}"
+                                        Margin="0,16,0,0"/>
+                </Grid>
+            </Border>
+
+            <!-- Chart: Rung động -->
+            <Border Grid.Column="1" Grid.Row="0" Style="{StaticResource Card}">
+                <Grid>
+                    <TextBlock Text="Rung động" FontSize="11" Foreground="#888"
+                               VerticalAlignment="Top"/>
+                    <lvc:CartesianChart Series="{Binding VibSeries}"
+                                        Margin="0,16,0,0"/>
+                </Grid>
+            </Border>
+
+            <!-- Chart: Công suất -->
+            <Border Grid.Column="0" Grid.Row="1" Style="{StaticResource Card}">
+                <Grid>
+                    <TextBlock Text="Công suất (W)" FontSize="11" Foreground="#888"
+                               VerticalAlignment="Top"/>
+                    <lvc:CartesianChart Series="{Binding PowerSeries}"
+                                        Margin="0,16,0,0"/>
+                </Grid>
+            </Border>
+
+            <!-- Events history -->
+            <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource Card}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Lịch sử sự kiện"
+                               FontSize="11" Foreground="#888" Margin="0,0,0,6"/>
+                    <ListView Grid.Row="1" ItemsSource="{Binding Events}"
+                              BorderThickness="0" FontSize="11">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,2">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Padding="4,1" CornerRadius="3" Margin="0,0,6,0">
+                                            <Border.Background>
+                                                <SolidColorBrush Color="#E24B4A" Opacity="0.15"/>
+                                            </Border.Background>
+                                            <TextBlock Text="{Binding Severity}" FontSize="10"/>
+                                        </Border>
+                                        <TextBlock Text="{Binding Type}" FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding Message}" Foreground="#888" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding Timestamp, StringFormat={}{0:HH:mm:ss dd/MM}}"
+                                               Foreground="#AAA" FontSize="10"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Border>
+
+            <!-- Alerts panel (bên phải, span 2 rows) -->
+            <Border Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"
+                    Style="{StaticResource Card}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
+                        <TextBlock Text="🔔 Cảnh báo" FontSize="13" FontWeight="SemiBold"/>
+                        <Border Background="#E24B4A" CornerRadius="10" Padding="6,1"
+                                Margin="8,0,0,0"
+                                Visibility="{Binding Alerts.Count,
+                                    Converter={StaticResource IntToVisibilityConverter}}">
+                            <TextBlock Text="{Binding Alerts.Count}"
+                                       Foreground="White" FontSize="11"/>
+                        </Border>
+                    </StackPanel>
+                    <ListView Grid.Row="1" ItemsSource="{Binding Alerts}"
+                              BorderThickness="0" FontSize="11">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderThickness="3,0,0,0" Padding="8,4" Margin="0,2">
+                                    <Border.BorderBrush>
+                                        <SolidColorBrush Color="{Binding SeverityColor}"/>
+                                    </Border.BorderBrush>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Type}" FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding Message}" Foreground="#555"
+                                                   TextWrapping="Wrap" FontSize="11"/>
+                                        <TextBlock Text="{Binding Timestamp, StringFormat={}{0:HH:mm:ss}}"
+                                                   Foreground="#AAA" FontSize="10"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Row 3: Status bar -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="4,4,4,2">
+            <TextBlock Text="{Binding RunState}" FontSize="11" Margin="0,0,12,0"/>
+            <TextBlock Text="|" Foreground="#DDD" Margin="0,0,12,0"/>
+            <TextBlock Text="WiFi: " FontSize="11" Foreground="#888"/>
+            <TextBlock Text="{Binding WifiRssi, StringFormat={}{0:0} dBm}"
+                       FontSize="11" Margin="0,0,12,0"/>
+            <TextBlock Text="{Binding StatusText}" FontSize="11" Foreground="#888"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

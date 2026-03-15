@@ -1,0 +1,118 @@
+﻿<Application x:Class="CheckerWPF.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:CheckerWPF.Converters"
+             Startup="OnStartup">
+    <Application.Resources>
+
+        <!-- ── Brushes ─────────────────────────────────────────────── -->
+        <SolidColorBrush x:Key="PrimaryBrush"
+                Color="#2B2F8F"/>
+        <SolidColorBrush x:Key="SurfaceBrush"
+                Color="#F4F6F9"/>
+        <SolidColorBrush x:Key="DangerBrush"
+                Color="#E24B4A"/>
+        <SolidColorBrush x:Key="AccentBrush"
+                Color="#1D9E75"/>
+
+        <!-- ── Converters ───────────────────────────────────────────── -->
+        <conv:BoolToVisibilityConverter    x:Key="BoolToVisibilityConverter"/>
+        <conv:StringToVisibilityConverter  x:Key="StringToVisibilityConverter"/>
+        <conv:IntToVisibilityConverter     x:Key="IntToVisibilityConverter"/>
+        <conv:TempAlertConverter           x:Key="TempAlertConverter"/>
+        <conv:OnlineColorConverter         x:Key="OnlineColorConverter"/>
+
+        <!-- ── Card (Border) ────────────────────────────────────────── -->
+        <Style x:Key="Card"
+                TargetType="Border">
+            <Setter Property="Background"
+                    Value="White"/>
+            <Setter Property="CornerRadius"
+                    Value="8"/>
+            <Setter Property="Padding"
+                    Value="16"/>
+            <Setter Property="Margin"
+                    Value="6"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="8"
+                            ShadowDepth="1"
+                                      Opacity="0.08"
+                            Color="Black"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ── Button base ──────────────────────────────────────────── -->
+        <Style x:Key="BaseBtn"
+                TargetType="Button">
+            <Setter Property="Foreground"
+                    Value="White"/>
+            <Setter Property="FontSize"
+                    Value="13"/>
+            <Setter Property="FontWeight"
+                    Value="SemiBold"/>
+            <Setter Property="Padding"
+                    Value="14,6"/>
+            <Setter Property="Cursor"
+                    Value="Hand"/>
+            <Setter Property="BorderThickness"
+                    Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bdr"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver"
+                                    Value="True">
+                                <Setter TargetName="Bdr"
+                                        Property="Opacity"
+                                        Value="0.85"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed"
+                                    Value="True">
+                                <Setter TargetName="Bdr"
+                                        Property="Opacity"
+                                        Value="0.7"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled"
+                                    Value="False">
+                                <Setter TargetName="Bdr"
+                                        Property="Opacity"
+                                        Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PrimaryBtn"
+                TargetType="Button"
+                BasedOn="{StaticResource BaseBtn}">
+            <Setter Property="Background"
+                    Value="{StaticResource PrimaryBrush}"/>
+        </Style>
+
+        <Style x:Key="AccentBtn"
+                TargetType="Button"
+                BasedOn="{StaticResource BaseBtn}">
+            <Setter Property="Background"
+                    Value="{StaticResource AccentBrush}"/>
+        </Style>
+
+        <Style x:Key="DangerBtn"
+                TargetType="Button"
+                BasedOn="{StaticResource BaseBtn}">
+            <Setter Property="Background"
+                    Value="{StaticResource DangerBrush}"/>
+        </Style>
+
+    </Application.Resources>
+</Application>

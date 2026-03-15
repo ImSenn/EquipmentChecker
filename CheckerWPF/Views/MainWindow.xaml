@@ -1,0 +1,76 @@
+<Window x:Class="CheckerWPF.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="EquipmentChecker Dashboard"
+        Width="1200" Height="760"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource SurfaceBrush}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar -->
+        <Border Grid.Column="0"
+                Background="{StaticResource PrimaryBrush}">
+            <StackPanel>
+                <!-- App name -->
+                <TextBlock Text="Equipment&#x0a;Checker"
+                           Foreground="White" FontSize="16" FontWeight="SemiBold"
+                           Margin="20,24,20,32" LineHeight="22"/>
+
+                <!-- Navigation buttons -->
+                <Button Command="{Binding ShowDeviceListCommand}"
+                        Margin="12,4">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Bdr" CornerRadius="6" Padding="12,10">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="⚙" FontSize="14" Foreground="White" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Thiết bị" Foreground="White" FontSize="13"/>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bdr" Property="Background" Value="#3C3489"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <!-- Spacer -->
+                <Rectangle Height="1" Fill="White" Opacity="0.15" Margin="16,16"/>
+
+                <!-- Connection status ở cuối sidebar -->
+                <StackPanel Margin="16,0,16,0" VerticalAlignment="Bottom">
+                    <TextBlock Text="Trạng thái kết nối" Foreground="#AAA" FontSize="11" Margin="0,0,0,4"/>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Ellipse Width="8" Height="8" Margin="0,0,6,0">
+                            <Ellipse.Style>
+                                <Style TargetType="Ellipse">
+                                    <Setter Property="Fill" Value="#E24B4A"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ConnectionStatus}" Value="Connected">
+                                            <Setter Property="Fill" Value="#1D9E75"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+                        <TextBlock Text="{Binding ConnectionStatus}"
+                                   Foreground="White" FontSize="12"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding CurrentUser}"
+                               Foreground="#CCC" FontSize="11" Margin="0,8,0,16"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Main content: ContentControl tự resolve View từ DataTemplate -->
+        <ContentControl Grid.Column="1"
+                        Content="{Binding CurrentView}"
+                        Margin="8"/>
+    </Grid>
+</Window>
